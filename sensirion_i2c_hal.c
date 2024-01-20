@@ -33,6 +33,8 @@
 #include "sensirion_common.h"
 #include "sensirion_config.h"
 
+#include <zephyr/drivers/i2c.h>
+
 /*
  * INSTRUCTIONS
  * ============
