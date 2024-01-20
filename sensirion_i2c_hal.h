@@ -33,6 +33,7 @@
 #define SENSIRION_I2C_HAL_H
 
 #include "sensirion_config.h"
+#include <zephyr/drivers/i2c.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -54,7 +55,7 @@ int16_t sensirion_i2c_hal_select_bus(uint8_t bus_idx);
  * Initialize all hard- and software components that are needed for the I2C
  * communication.
  */
-void sensirion_i2c_hal_init(void);
+void sensirion_i2c_hal_init(struct i2c_dt_spec* dev_i2c);
 
 /**
  * Release all resources initialized by sensirion_i2c_hal_init().

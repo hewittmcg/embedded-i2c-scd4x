@@ -35,6 +35,8 @@
 
 #include <zephyr/drivers/i2c.h>
 
+static struct i2c_dt_spec* dev_i2c = NULL;
+
 /*
  * INSTRUCTIONS
  * ============
@@ -64,8 +66,8 @@ int16_t sensirion_i2c_hal_select_bus(uint8_t bus_idx) {
  * Initialize all hard- and software components that are needed for the I2C
  * communication.
  */
-void sensirion_i2c_hal_init(void) {
-    /* TODO:IMPLEMENT */
+void sensirion_i2c_hal_init(struct i2c_dt_spec *dev_i2c_ptr) {
+    dev_i2c = dev_i2c_ptr;
 }
 
 /**
@@ -86,8 +88,7 @@ void sensirion_i2c_hal_free(void) {
  * @returns 0 on success, error code otherwise
  */
 int8_t sensirion_i2c_hal_read(uint8_t address, uint8_t* data, uint16_t count) {
-    /* TODO:IMPLEMENT */
-    return NOT_IMPLEMENTED_ERROR;
+    return i2c_read_dt(dev_i2c, data, count);
 }
 
 /**
@@ -103,8 +104,7 @@ int8_t sensirion_i2c_hal_read(uint8_t address, uint8_t* data, uint16_t count) {
  */
 int8_t sensirion_i2c_hal_write(uint8_t address, const uint8_t* data,
                                uint16_t count) {
-    /* TODO:IMPLEMENT */
-    return NOT_IMPLEMENTED_ERROR;
+    return i2c_write_dt(dev_i2c, data, count);
 }
 
 /**
@@ -116,5 +116,5 @@ int8_t sensirion_i2c_hal_write(uint8_t address, const uint8_t* data,
  * @param useconds the sleep time in microseconds
  */
 void sensirion_i2c_hal_sleep_usec(uint32_t useconds) {
-    /* TODO:IMPLEMENT */
+    k_usleep(useconds);
 }
