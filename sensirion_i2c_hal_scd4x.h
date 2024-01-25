@@ -29,21 +29,15 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "sensirion_i2c_hal.h"
-#include "sensirion_common.h"
-#include "sensirion_config.h"
+#ifndef SENSIRION_I2C_HAL_H
+#define SENSIRION_I2C_HAL_H
 
+#include "sensirion_config.h"
 #include <zephyr/drivers/i2c.h>
 
-static struct i2c_dt_spec* dev_i2c = NULL;
-
-/*
- * INSTRUCTIONS
- * ============
- *
- * Implement all functions where they are marked as IMPLEMENT.
- * Follow the function specification in the comments.
- */
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
 
 /**
  * Select the current i2c bus by index.
@@ -55,27 +49,18 @@ static struct i2c_dt_spec* dev_i2c = NULL;
  * @param bus_idx   Bus index to select
  * @returns         0 on success, an error code otherwise
  */
-int16_t sensirion_i2c_hal_select_bus(uint8_t bus_idx) {
-    /* TODO:IMPLEMENT or leave empty if all sensors are located on one single
-     * bus
-     */
-    return NOT_IMPLEMENTED_ERROR;
-}
+int16_t sensirion_i2c_hal_select_bus(uint8_t bus_idx);
 
 /**
  * Initialize all hard- and software components that are needed for the I2C
  * communication.
  */
-void sensirion_i2c_hal_init(struct i2c_dt_spec *dev_i2c_ptr) {
-    dev_i2c = dev_i2c_ptr;
-}
+void sensirion_i2c_hal_init_scd4x(struct i2c_dt_spec* dev_i2c);
 
 /**
  * Release all resources initialized by sensirion_i2c_hal_init().
  */
-void sensirion_i2c_hal_free(void) {
-    /* TODO:IMPLEMENT or leave empty if no resources need to be freed */
-}
+void sensirion_i2c_hal_free(void);
 
 /**
  * Execute one read transaction on the I2C bus, reading a given number of bytes.
@@ -87,9 +72,7 @@ void sensirion_i2c_hal_free(void) {
  * @param count   number of bytes to read from I2C and store in the buffer
  * @returns 0 on success, error code otherwise
  */
-int8_t sensirion_i2c_hal_read(uint8_t address, uint8_t* data, uint16_t count) {
-    return i2c_read_dt(dev_i2c, data, count);
-}
+int8_t sensirion_i2c_hal_read(uint8_t address, uint8_t* data, uint16_t count);
 
 /**
  * Execute one write transaction on the I2C bus, sending a given number of
@@ -103,18 +86,28 @@ int8_t sensirion_i2c_hal_read(uint8_t address, uint8_t* data, uint16_t count) {
  * @returns 0 on success, error code otherwise
  */
 int8_t sensirion_i2c_hal_write(uint8_t address, const uint8_t* data,
-                               uint16_t count) {
-    return i2c_write_dt(dev_i2c, data, count);
-}
+                               uint16_t count);
 
 /**
  * Sleep for a given number of microseconds. The function should delay the
- * execution for at least the given time, but may also sleep longer.
+ * execution approximately, but no less than, the given time.
  *
+ * When using hardware i2c:
  * Despite the unit, a <10 millisecond precision is sufficient.
+ *
+ * When using software i2c:
+ * The precision needed depends on the desired i2c frequency, i.e. should be
+ * exact to about half a clock cycle (defined in
+ * `SENSIRION_I2C_CLOCK_PERIOD_USEC` in `sensirion_sw_i2c_gpio.h`).
+ *
+ * Example with 400kHz requires a precision of 1 / (2 * 400kHz) == 1.25usec.
  *
  * @param useconds the sleep time in microseconds
  */
-void sensirion_i2c_hal_sleep_usec(uint32_t useconds) {
-    k_usleep(useconds);
+void sensirion_i2c_hal_sleep_usec(uint32_t useconds);
+
+#ifdef __cplusplus
 }
+#endif /* __cplusplus */
+
+#endif /* SENSIRION_I2C_HAL_H */

@@ -33,7 +33,7 @@
 
 #include "scd4x_i2c.h"
 #include "sensirion_common.h"
-#include "sensirion_i2c_hal.h"
+#include "sensirion_i2c_hal_scd4x.h"
 
 /**
  * TO USE CONSOLE OUTPUT (PRINTF) IF NOT PRESENT ON YOUR PLATFORM
@@ -43,7 +43,7 @@
 int main(void) {
     int16_t error = 0;
 
-    sensirion_i2c_hal_init();
+    sensirion_i2c_hal_init_scd4x();
 
     // Clean up potential SCD40 states
     scd4x_wake_up();
